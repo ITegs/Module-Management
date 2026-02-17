@@ -8,8 +8,8 @@ services:
       POSTGRES_USER: ${DB_USER}
     ports:
       - "${DB_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
     networks:
       - module-management-network
     restart: unless-stopped
@@ -26,27 +26,6 @@ services:
       - ../keycloak-themes:/opt/keycloak/themes
     ports:
       - "${AUTH_PORT:-8081}:8080"
-    networks:
-      - module-management-network
-    restart: unless-stopped
-
-  text-embeddings-inference:
-    image: ghcr.io/huggingface/text-embeddings-inference:cpu-latest
-    container_name: module-management-tei
-    platform: linux/amd64
-    pull_policy: always
-    command:
-      - --model-id
-      - sentence-transformers/all-mpnet-base-v2
-      - --pooling
-      - mean
-      - --dtype
-      - float32
-      - --auto-truncate
-    volumes:
-      - hf_cache:/data
-    ports:
-      - "1235:80"
     networks:
       - module-management-network
     restart: unless-stopped
